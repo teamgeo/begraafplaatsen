@@ -220,6 +220,9 @@ function onEachFeature(feature, layer) {
                 }),
                 $('<p/>', {
                     'html': 'Adres...'
+                }),
+                $('<small/>', {
+                    'html': '<i>Klik om in te zoomen</i>'
                 })
             )
             .css('cursor', 'pointer')
@@ -259,11 +262,17 @@ function mapInit() {
             }
         });
 
+    console.log(RD.projection.unproject([102009.0, 480557.0]));
+    console.log(RD.projection.unproject([129270.0, 506221.0]));
+
     map = new L.Map('map', {
         crs: RD,
         layers: [graven, begraafplaatsen],
         continuousWorld: false,
-        maxZoom: 16
+        //maxBounds: new L.LatLngBounds([52.53486271003716, 4.583721606054298],
+        //                              [52.37211973493022, 5.013210485619031]),
+        maxZoom: 16,
+        minZoom: 7
     });
 
     if ($.urlParam('begraafplaats')) {
@@ -286,14 +295,15 @@ function mapInit() {
 
     handleZoom();
 
-    /*map.on('click', function (e) {
+    map.on('click', function (e) {
         if (window.console) {
             var point = RD.projection.project(e.latlng);
             console.log('RD X: ' + point.x + ', Y: ' + point.y);
+            console.log('Lat: ' + e.latlng.lat + ', Lon: ' + e.latlng.lng);
         }
-        onMapClick(e);
+        //onMapClick(e);
     });
-    */
+    
 }
 
 function guiInit() {
@@ -317,5 +327,5 @@ $(document).ready(function () {
 
 $(window).resize(function () {
     var height = window.innerHeight ? window.innerHeight : $(window).height();
-    $('#map').css('height', (height - 97));
+    $('#map').css('height', (height - 102));
 }).resize();
