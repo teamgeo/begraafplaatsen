@@ -9,7 +9,7 @@ var geojsonBegraafplaatsen = {
     "features": [{
         "type": "Feature",
         "properties": {
-        	"name": "wormerveer",
+        	"name": "noordster",
             "locatie": "Begraafplaats Noordster Wormerveer",
             "In_beheer": "Gemeente"
         },
