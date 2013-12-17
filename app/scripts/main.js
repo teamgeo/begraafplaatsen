@@ -9,6 +9,7 @@
 /*jslint browser: true*/
 /*global $, jQuery*/
 /*global L, leaflet*/
+/*global geojsonBegraafplaatsen*/
 'use strict';
 var map, marker, gpsLocation;
 var rootUrl = 'http://geo.zaanstad.nl/geoserver/ows';
@@ -35,17 +36,57 @@ $.urlParam = function (name) {
     }
 };
 
-function showPointer(item) {
+function kaartTab() {
     $('#tabs a[href=#kaart]').tab('show');
-    $(window).scrollTop(0);
+}
+
+function goToXY(x, y, zoom) {
+    var cemeteryLocation = RD.projection.unproject(new L.Point(x, y), map.getMaxZoom());
+    map.setView(cemeteryLocation, zoom, {
+        animate: false
+    });
+}
+
+function goToName(name) {
+    for (var i = 0; i < geojsonBegraafplaatsen.features.length; i++) {
+        if (name === geojsonBegraafplaatsen.features[i].properties.name) {
+            goToXY(
+                geojsonBegraafplaatsen.features[i].geometry.coordinates[0],
+                geojsonBegraafplaatsen.features[i].geometry.coordinates[1],
+                13);
+        }
+    }
+}
+
+function showPointer(item) {
+    kaartTab();
 
     var rdPoint = new L.Point(item.geometry.coordinates[0], item.geometry.coordinates[1]),
         markerLocation = RD.projection.unproject(rdPoint, map.getMaxZoom()),
-        label = '<b>' + item.properties.naam + '</b><br/>' +
-            'Geboren: ' + item.properties.dgeb_str + '<br/>' +
-            'Overleden: ' + item.properties.dovl_str + '<br/>' +
-            'Grafnummer: ' + item.properties.grafnummer + '<br/>' +
-            'Laag: ' + item.properties.laag + '<br/>';
+        label = $('<div/>', {}).append(
+            $('<b/>', {
+                'html': item.properties.naam
+            }),
+            $('<div/>', {
+                'html': 'Geboren: ' + item.properties.dgeb_str 
+                    +'<br/>' 
+                    +'Overleden: '  + item.properties.dovl_str 
+                    +'<br/>' 
+                    +'Grafnummer: ' + item.properties.grafnummer 
+                    +'<br/>' 
+                    +'Laag: '       + item.properties.laag 
+                +' <br/><br/>'
+            }),
+            $('<a/>', {
+                'html': '<span class="glyphicon glyphicon-record"></span> Inzoomen'
+            })
+            .css('cursor', 'pointer')
+            .click(function () {
+                goToXY(item.geometry.coordinates[0],
+                    item.geometry.coordinates[1],
+                    16);
+            })
+        )[0];
 
     map.setView(markerLocation, 16, {
         animate: false
@@ -61,33 +102,11 @@ function showPointer(item) {
     map.addLayer(marker);
 
     setTimeout(function () {
-        map.invalidateSize();
         marker.openPopup();
     }, 500);
 }
 
-function goToXY(x, y) {
-    var cemeteryLocation = RD.projection.unproject(new L.Point(x, y), map.getMaxZoom());
-    map.setView(cemeteryLocation, 13, {
-        animate: false
-    });
-    setTimeout(function () {
-        map.invalidateSize();
-    }, 500);
-}
-
-function goToName(name) {
-    $('#tabs a[href=#kaart]').tab('show');
-    $(window).scrollTop(0);
-    for (var i = 0; i < geojsonBegraafplaatsen.features.length; i++) {
-        if (name === geojsonBegraafplaatsen.features[i].properties.name) {
-            goToXY(geojsonBegraafplaatsen.features[i].geometry.coordinates[0], geojsonBegraafplaatsen.features[i].geometry.coordinates[1]);
-        }
-    }
-}
-
 function onLocationFound(e) {
-    console.log('locationFound');
 
     if (gpsLocation) {
         gpsLocation.eachLayer(function (layer) {
@@ -99,7 +118,7 @@ function onLocationFound(e) {
             stroke: true,
             weight: 2,
             color: '#0082A4',
-            fillColor: '#A8A9A3', // '#00A5C7',
+            fillColor: '#A8A9A3',
             fillOpacity: 0.2,
             clickable: false
         });
@@ -127,15 +146,20 @@ function handleZoom(e) {
 
 function resultList(query) {
 
-    $('#pleaseWaitDialog').modal();
+    $('#searchBtn').button('loading');
 
     var customParams = {
         //bbox : map.getBounds().toBBoxString(),
         typeName: 'geo:begraven_overledenen',
         sortBy: 'ngsl',
-        cql_filter: "naam ILIKE '%" + query + "%'"
+        cql_filter: "naam ILIKE '%" + query.replace(' ', '%') + "%'"
     };
     var parameters = L.Util.extend(defaultParameters, customParams);
+
+    var newList = $('<div/>', {
+        'id': 'list',
+        'class': 'list-group'
+    });
 
     $.ajax({
         url: rootUrl + L.Util.getParamString(parameters),
@@ -143,6 +167,7 @@ function resultList(query) {
         type: 'get',
         dataType: 'json',
         jsonp: false,
+        timeout: 2000,
         success: function (json) {
 
             $('#feedback').replaceWith(
@@ -152,11 +177,6 @@ function resultList(query) {
                     'html': '<small>Gevonden resultaten: ' + json.features.length + "<i class='pull-right'>Klik op de naam voor meer informatie</i></small>"
                 })
             );
-
-            var newList = $('<div/>', {
-                'id': 'list',
-                'class': 'list-group'
-            });
 
             $.each(json.features, function (i, item) {
                 newList.append(
@@ -170,7 +190,7 @@ function resultList(query) {
                         }).append(
                             $('<button/>', {
                                 'class': 'btn btn-default pull-right',
-                                'html': "<span class='glyphicon glyphicon-map-marker'></span> Kaart"
+                                'html': '<span class="glyphicon glyphicon-map-marker"></span> Kaart'
                             }).on('click', function () {
                                 showPointer(item);
                             })),
@@ -192,7 +212,7 @@ function resultList(query) {
                             }),
                             $('<div/>', {
                                 'class': 'collapse',
-                                'html': '<i>Naam partner: ' + item.properties.ngsl_prt + '</i>'
+                                'html': item.properties.ngsl_prt ? '<i>Naam partner: ' + item.properties.ngsl_prt + '</i>' : ''
                             })
                         )
                     ).on('click', function (e) {
@@ -204,31 +224,42 @@ function resultList(query) {
                     })
                 );
             });
+        },
+        error: function () {
+            $('#feedback').replaceWith(
+                $('<div/>', {
+                    'id': 'feedback',
+                    'class': 'alert alert-warning collapse in',
+                    'html': '<small>Problemen geconstateerd tijdens het opvragen van de gegevens, probeer s.v.p. opnieuw te zoeken.</small>'
+                })
+            );            
+        },
+        complete: function () {
             $('#list').replaceWith(newList);
-            $('#pleaseWaitDialog').modal('hide');
+            $('#searchBtn').button('reset');
             $('#searchValue').blur();
+            $('html, body').animate({scrollTop:$('#feedback').position().top}, 'slow');
         }
     });
 }
 
 function onEachFeature(feature, layer) {
-    // does this feature have a property named popupContent?
     if (feature.properties && feature.properties.locatie) {
         layer.bindPopup($('<div/>', {}).append(
-                $('<h5/>', {
-                    'html': '<span class="glyphicon glyphicon-zoom-in"></span> ' + feature.properties.locatie
-                }),
-                $('<p/>', {
-                    'html': 'Adres...'
-                }),
-                $('<small/>', {
-                    'html': '<i>Klik om in te zoomen</i>'
-                })
-            )
+            $('<h5/>', {
+                'html': feature.properties.locatie
+            }),
+            $('<p/>', {
+                'html': 'Adres...'
+            }),
+            $('<a/>', {
+                'html': '<span class="glyphicon glyphicon-record"></span> Inzoomen'
+            })
             .css('cursor', 'pointer')
             .click(function () {
                 goToName(feature.properties.name);
-            })[0]);
+            })
+        )[0]);
     }
 }
 
@@ -242,8 +273,9 @@ function mapInit() {
         tiled: true,
         version: '1.1.1',
         reuseTiles: true,
+        detectRetina: true,
         attribution: 'Zaanstad © 2013 Zaanstad'
-        }),
+    }),
         locationMarker = L.AwesomeMarkers.icon({
             prefix: 'glyphicon',
             icon: 'plus',
@@ -262,18 +294,18 @@ function mapInit() {
             }
         });
 
-    console.log(RD.projection.unproject([102009.0, 480557.0]));
-    console.log(RD.projection.unproject([129270.0, 506221.0]));
-
     map = new L.Map('map', {
         crs: RD,
         layers: [graven, begraafplaatsen],
         continuousWorld: false,
-        //maxBounds: new L.LatLngBounds([52.53486271003716, 4.583721606054298],
-        //                              [52.37211973493022, 5.013210485619031]),
         maxZoom: 16,
-        minZoom: 7
+        minZoom: 7,
+        zoomControl: false
     });
+
+    map.addControl(new L.Control.ZoomMin({
+        zoomLatLngBounds: begraafplaatsen.getBounds()
+    }));
 
     if ($.urlParam('begraafplaats')) {
         goToName($.urlParam('begraafplaats'));
@@ -295,15 +327,16 @@ function mapInit() {
 
     handleZoom();
 
+    /*
     map.on('click', function (e) {
         if (window.console) {
             var point = RD.projection.project(e.latlng);
             console.log('RD X: ' + point.x + ', Y: ' + point.y);
             console.log('Lat: ' + e.latlng.lat + ', Lon: ' + e.latlng.lng);
         }
-        //onMapClick(e);
     });
-    
+    */
+
 }
 
 function guiInit() {
@@ -314,18 +347,35 @@ function guiInit() {
                 'class': 'btn btn-default',
                 'html': value.properties.locatie
             }).on('click', function () {
+                kaartTab();
                 goToName(value.properties.name);
             }));
         }
     });
+    if (window.location.hash) {
+        $('#tabs a[href=' + window.location.hash + ']').tab('show');
+    } else {
+        $('#tabs a[href=#kaart]').tab('show');
+    }
 }
 
-$(document).ready(function () {
-    guiInit();
-    mapInit();
+$(function () {
+    $('#tabs a[href="#kaart"]').on('shown.bs.tab', function (e) {
+        setTimeout(function () {
+            map.invalidateSize();
+        }, 250);
+    });
+    $(document).on('shown.bs.tab', function (event) {
+        window.location.hash = $(event.target).attr('href');
+        $(window).scrollTop(0);
+    });
+    $(document).ready(function () {
+        guiInit();
+        mapInit();
+    });
+    $(window).resize(function () {
+        var height = window.innerHeight ? window.innerHeight : $(window).height();
+        $('#map').css('height', (height - 103));
+    }).resize();
+    FastClick.attach(document.body);
 });
-
-$(window).resize(function () {
-    var height = window.innerHeight ? window.innerHeight : $(window).height();
-    $('#map').css('height', (height - 102));
-}).resize();
