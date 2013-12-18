@@ -232,7 +232,7 @@ function resultList(query) {
                     'class': 'alert alert-warning collapse in',
                     'html': '<small>Problemen geconstateerd tijdens het opvragen van de gegevens, probeer s.v.p. opnieuw te zoeken.</small>'
                 })
-            );            
+            );
         },
         complete: function () {
             $('#list').replaceWith(newList);
@@ -343,13 +343,17 @@ function guiInit() {
     $.each(geojsonBegraafplaatsen.features, function (i, value) {
         if (value.properties.name) {
             $('#begraafplaatsOption').append($('<option>').text(value.properties.locatie).attr('value', value.properties.name));
-            $('#begraafplaatsList').append($('<button/>', {
-                'class': 'btn btn-default',
+            $('#begraafplaatsList').append(
+            	$('<a/>', {
+                'class': 'lead',
+                'href': '#',
                 'html': value.properties.locatie
             }).on('click', function () {
                 kaartTab();
                 goToName(value.properties.name);
-            }));
+            }),
+            $('<br/>')
+            );
         }
     });
     if (window.location.hash) {

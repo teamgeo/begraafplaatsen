@@ -17,6 +17,13 @@ a:active, a:focus {
     text-decoration: none;
 }
 
+a.list-group-item.active, a.list-group-item.active:hover, a.list-group-item.active:focus {
+  text-shadow: none;
+  color: #FFFFF;
+  background-color: #00A5C7;
+  border-color: #00A5C7;
+}
+
 h1, h2, h3, h4, h5, h6 {
     color: #A8A9A3;
 }
@@ -70,18 +77,15 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .debug {
-    border: 0 none;
-    right: 0;
-    position: absolute;
-    top: 0;
-    z-index: 10000;
+  border: 0 none;
+  right: 0;
+  position: absolute;
+  top: 0;
+  z-index: 10000;
 }
 
-a.list-group-item.active, a.list-group-item.active:hover, a.list-group-item.active:focus {
-  text-shadow: none;
-  color: #FFFFF;
-  background-color: #00A5C7;
-  border-color: #00A5C7;
+.no-padding {
+  padding-left: 0;
 }
 
 .navbar {
