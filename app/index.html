@@ -71,39 +71,36 @@
                     </div>
                 </div>
                 <div class="tab-pane fade" id="info">
-                    <h2>Info</h2>
-                    <p>Hier komt een verhaaltje over deze webapplicatie.</p>
-                    <p><strong>Email:</strong> geo-informatie(at)zaanstad(dot)com</p>
-                    <p><strong>Website</strong>  <a href="http://www.zaanstad.nl">www.zaanstad.nl</a>
+                    <h3>Info</h3>
+                    <p>De gemeente Zaanstad heeft zeven gemeentelijke begraafplaatsen in beheer. Door te klikken op een van onderstaande gemeentelijke begraafplaatsen krijgt u een overzichtkaart van de begraafplaats te zien. Vervolgens kunt u door de naam van een overledene in te voeren zien in welk graf deze begraven ligt.</p>
+                    <blockquote><div id="begraafplaatsList"></div></blockquote>
+                    <p>In dit overzicht zijn niet de graven opgenomen, die door de religieuze instellingen zoals kerken zijn uitgegeven. Deze graven zijn niet bij de gemeente in beheer. Voor meer informatie hierover verwijzen wij u naar de desbetreffende instelling. <br/>Mocht de door u geraadpleegde informatie niet juist zijn, zou u dit dan aan ons willen laten weten? U kunt een emailbericht sturen naar <a href="mailto:begraafrechten@zaanstad.nl">begraafrechten@zaanstad.nl</a>.
                     </p>
                     <hr>
-                    <p>De volgende begraafplaatsen zijn onder beheer van gemeente Zaanstad. Klik op de naam van de begraafplaats om in te zoomen:</p>
-                    <div id="begraafplaatsList" class="btn-group-vertical"></div>
+                    <small>De informatie, zowel tekst als beeldmateriaal, valt onder copyright © van de gemeente Zaanstad. De gemeente streeft naar correctie en actuele informatie, maar kan niet garanderen dat de informatie juist is op het moment waarop zij wordt ontvangen of dat de informatie na verloop van tijd nog steeds juist is. Daarom kunnen aan de informatie op deze pagina’s geen rechten worden ontleend en aanvaardt de gemeente geen aansprakelijkheid voor schade als gevolg van onjuistheden en/of gedateerde informatie. De gemeente Zaanstad is niet verantwoordelijk voor de sites waarnaar wordt verwezen.</small>
                 </div>
                 <div class="tab-pane fade" id="zoeken">
-                    <h2>Zoeken</h2>
-                    Hier komt een verhaaltje over deze webapplicatie.
-                    <div class="container">
-                        <form onsubmit="resultList($('#searchValue').val()); return false;">
-                            <fieldset>
-                                <div class="form-group">
-                                    <label class="control-label">Naam</label>
-                                    <input type="text" id="searchValue" name="zoekterm" class="form-control" placeholder="Voer een naam in">
-                                    <p class="help-block"><small>Voer een achternaam in of een gedeelte van een naam, zoals <em>kerman</em> volstaat voor <em>Akkerman</em></small>
-                                    </p>
-                                    <label class="control-label">Begraafplaats</label>
-                                    <select id="begraafplaatsOption" name="begraafplaats" class="form-control">
-                                        <option value="%">Alle begraafplaatsen</option>
-                                    </select>
-                                    <p class="help-block"><small>Een <a href="#info" onclick="$('#tabs a[href=#info]').tab('show');">overzicht van de begraafplaatsen</a> is ook te vinden</small>
-                                    </p>
-                                </div>
-                            </fieldset>
-                            <div class="form-group">
-                                <button class="btn btn-default pull-right" id="searchBtn" data-loading-text="Opvragen..." type="submit"><span class="glyphicon glyphicon-search"></span> Zoeken</button>
-                            </div>
-                        </form>
+                    <h3>Zoeken</h3>
+                    <p>Wanneer u op zoek bent naar een overlede, type dan de achternaam in. Door vervolgens op de naam te klikken vindt u specifieke informatie over de plek waar diegene begraven is, de geboortedatum en de sterftedatum.</p>
+                    <form role="form" onsubmit="resultList($('#searchValue').val()); return false;">
+                    <div class="form-group">
+                        <label for="searchValue" class="col-sm-2 control-label no-padding">Naam</label>
+                        <div class="col-sm-10 no-padding">
+                        <input type="text" id="searchValue" name="zoekterm" class="form-control" placeholder="Voer een naam in">
+                        <p class="help-block"><small>Voer een achternaam in of een gedeelte van een naam, zoals <em>kerman</em> volstaat voor <em>Akkerman</em>.</small></p>
+                        </div>
                     </div>
+                    <div class="form-group">
+                        <label for="begraafplaatsOption" class="col-sm-2 control-label no-padding">Begraafplaats</label>
+                        <div class="col-sm-10 no-padding">
+                        <select id="begraafplaatsOption" name="begraafplaats" class="form-control">
+                            <option value="%">Alle begraafplaatsen</option>
+                        </select>
+                        <p class="help-block"><small>In het tabblad Info vindt u <a href="#info" onclick="$('#tabs a[href=#info]').tab('show');">een overzicht van de begraafplaatsen</a>.</small></p>
+                        </div>
+                    </div>
+                    <button class="btn btn-default" id="searchBtn" data-loading-text="Opvragen..." type="submit"><span class="glyphicon glyphicon-search"></span> Zoeken</button>
+                    </form>
                     <hr>
                     <div class="alert alert-info collapse" id="feedback">Feedback</div>
                     <div class="list-group" id="list">
@@ -121,14 +118,12 @@
 
         <!-- build:js scripts/app.js -->
         <script src="bower_components/jquery/jquery.js"></script>
-        <script src="bower_components/sass-bootstrap/js/affix.js"></script>
         <script src="bower_components/sass-bootstrap/js/alert.js"></script>
         <script src="bower_components/sass-bootstrap/js/dropdown.js"></script>
         <script src="bower_components/sass-bootstrap/js/tooltip.js"></script>
         <script src="bower_components/sass-bootstrap/js/modal.js"></script>
         <script src="bower_components/sass-bootstrap/js/transition.js"></script>
         <script src="bower_components/sass-bootstrap/js/button.js"></script>
-        <script src="bower_components/sass-bootstrap/js/popover.js"></script>
         <script src="bower_components/sass-bootstrap/js/collapse.js"></script>
         <script src="bower_components/sass-bootstrap/js/tab.js"></script>
         <script src="bower_components/fastclick/lib/fastclick.js"></script>
