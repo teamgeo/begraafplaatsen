@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2008-2013 Zaanstad Municipality
+ Copyright (c) 2008-2014 Zaanstad Municipality
 
  Published under the GPL license.
  See https://github.com/teamgeo/webapp-begraafplaatsen/raw/master/license.txt for the full text
@@ -21,8 +21,14 @@ var defaultParameters = {
     outputFormat: 'json',
     SrsName: 'EPSG:28992'
 };
+var projdef = '+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +units=m +towgs84=565.2369,50.0087,465.658,-0.406857330322398,0.350732676542563,-1.8703473836068,4.0812 +no_defs';
+proj4.defs('urn:ogc:def:crs:EPSG::28992', projdef);
+
 var res = [3440.640, 1720.320, 860.160, 430.080, 215.040, 107.520, 53.760, 26.880, 13.440, 6.720, 3.360, 1.680, 0.840, 0.420, 0.210, 0.105, 0.05250];
-var RD = new L.Proj.CRS('EPSG:28992', '+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +units=m +towgs84=565.2369,50.0087,465.658,-0.406857330322398,0.350732676542563,-1.8703473836068,4.0812 +no_defs', {
+var RD = new L.Proj.CRS(
+    'EPSG:28992', 
+    projdef, 
+    {
     transformation: new L.Transformation(1, 285401.920, -1, 903401.920),
     resolutions: res
 });
@@ -41,7 +47,8 @@ function kaartTab() {
 }
 
 function goToXY(x, y, zoom) {
-    var cemeteryLocation = RD.projection.unproject(new L.Point(x, y), map.getMaxZoom());
+    //var cemeteryLocation = RD.projection.unproject(new L.Point(x, y), map.getMaxZoom());
+    var cemeteryLocation = RD.projection.pointToLatLng(new L.Point(x, y));
     map.setView(cemeteryLocation, zoom, {
         animate: false
     });
@@ -50,10 +57,25 @@ function goToXY(x, y, zoom) {
 function goToName(name) {
     for (var i = 0; i < geojsonBegraafplaatsen.features.length; i++) {
         if (name === geojsonBegraafplaatsen.features[i].properties.name) {
-            goToXY(
-                geojsonBegraafplaatsen.features[i].geometry.coordinates[0],
-                geojsonBegraafplaatsen.features[i].geometry.coordinates[1],
-                13);
+
+            var feature = geojsonBegraafplaatsen.features[i];
+            var bounds = L.latLngBounds(feature.properties.latlngbounds);
+            //L.rectangle(bounds, {color: "#ff7800", weight: 1}).addTo(map);
+            map.fitBounds(bounds);
+        }
+    }
+}
+
+function mapBounds(name) {
+    for (var i = 0; i < geojsonBegraafplaatsen.features.length; i++) {
+        if (name === geojsonBegraafplaatsen.features[i].properties.name) {
+
+            var feature = geojsonBegraafplaatsen.features[i];
+            var bounds = L.latLngBounds(feature.properties.latlngbounds);
+            var top = RD.projection.project(bounds.getNorthEast());
+            var bottom = RD.projection.project(bounds.getSouthWest());
+            //L.rectangle(bounds, {color: "#ff7800", weight: 1}).addTo(map);
+            return bottom.x + "," + bottom.y + "," + top.x + "," + top.y;
         }
     }
 }
@@ -88,7 +110,7 @@ function showPointer(item) {
             })
         )[0];
 
-    map.setView(markerLocation, 16, {
+    map.setView(markerLocation, 15, {
         animate: false
     });
     if (marker) {
@@ -144,19 +166,35 @@ function handleZoom(e) {
     }
 }
 
-function resultList(query) {
+function toggleSearch(value) {
+
+}
+
+function resultList(query, name, type) {
 
     $('#searchBtn').button('loading');
+    var bbox = mapBounds(name),
+        filter;
+
+    if (type == 'naam') {
+        filter = "naam ILIKE '%" + query.replace(' ', '%') + "%'";
+    } else if (type == 'grafnummer') {
+        filter = "grafnummer ILIKE '%" + query.replace(' ', '%') + "%'";
+    }
+
+    if (bbox) {
+        filter =  filter + " AND BBOX(geom," + bbox + ")";
+    }  
+
 
     var customParams = {
-        //bbox : map.getBounds().toBBoxString(),
+        //bbox: map.getBounds().toBBoxString(),
         typeName: 'geo:begraven_overledenen',
         sortBy: 'ngsl',
-        cql_filter: "naam ILIKE '%" + query.replace(' ', '%') + "%'"
-    };
-    var parameters = L.Util.extend(defaultParameters, customParams);
-
-    var newList = $('<div/>', {
+        cql_filter: filter
+    },
+        parameters = L.Util.extend(defaultParameters, customParams),
+        newList = $('<div/>', {
         'id': 'list',
         'class': 'list-group'
     });
@@ -266,16 +304,12 @@ function onEachFeature(feature, layer) {
 function mapInit() {
     L.Icon.Default.imagePath = 'bower_components/leaflet/dist/images';
 
-    var graven = L.tileLayer.wms('http://geo.zaanstad.nl/geowebcache/service/wms?', {
-        layers: 'Begraafplaatsen',
-        format: 'image/png8',
-        transparent: false,
-        tiled: true,
-        version: '1.1.1',
-        reuseTiles: true,
-        detectRetina: true,
-        attribution: 'Zaanstad © 2013 Zaanstad'
-    }),
+    var graven = new L.TileLayer('http://geo.zaanstad.nl/mapproxy/tms/1.0.0/Begraafplaatsen/EPSG28992/{z}/{x}/{y}.png', {
+            tms: true,
+            minZoom: 7,
+            detectRetina: true,
+            attribution: 'Zaanstad © 2013 Zaanstad'
+        }),
         locationMarker = L.AwesomeMarkers.icon({
             prefix: 'glyphicon',
             icon: 'plus',
@@ -288,9 +322,6 @@ function mapInit() {
                 return L.marker(latlng, {
                     icon: locationMarker
                 });
-            },
-            filter: function (feature, layer) {
-                return feature.properties.In_beheer;
             }
         });
 
@@ -336,7 +367,6 @@ function mapInit() {
         }
     });
     */
-
 }
 
 function guiInit() {
@@ -368,6 +398,12 @@ $(function () {
         setTimeout(function () {
             map.invalidateSize();
         }, 250);
+    });
+    $(".dropdown-menu li a").click(function(){
+      var selText = $(this).text();
+      $(this).parents('.input-group-btn').find('.dropdown-toggle').html(selText+' <span class="caret"></span>');
+      $(this).parents('.input-group-btn').find('.dropdown-toggle').val(selText.toLowerCase());
+      $('#searchValue').val('');
     });
     $(document).on('shown.bs.tab', function (event) {
         window.location.hash = $(event.target).attr('href');
