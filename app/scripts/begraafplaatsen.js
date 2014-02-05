@@ -1,3 +1,10 @@
+/*
+ Copyright (c) 2008-2014 Zaanstad Municipality
+
+ Published under the GPL license.
+ See https://github.com/teamgeo/webapp-begraafplaatsen/raw/master/license.txt for the full text
+ of the license.
+*/
 var geojsonBegraafplaatsen = {
     'type': 'FeatureCollection',
     'crs': {
@@ -11,177 +18,98 @@ var geojsonBegraafplaatsen = {
         'properties': {
             'name': 'noordster',
             'locatie': 'Begraafplaats Noordster Wormerveer',
-            'In_beheer': 'Gemeente'
+            'latlngbounds': [
+                [52.499160606098798, 4.781167963144955], //ne
+                [52.498075626755359, 4.779357759265973]  //sw
+                ]
         },
         'geometry': {
             'type': 'Point',
-            'coordinates': [113763.629617717786459, 501390.475787043222226]
-        }
-    }, {
-        'type': 'Feature',
-        'properties': {
-            'locatie': null,
-            'In_beheer': null
-        },
-        'geometry': {
-            'type': 'Point',
-            'coordinates': [113009.533097396837547, 501536.116337445913814]
-        }
-    }, {
-        'type': 'Feature',
-        'properties': {
-            'locatie': null,
-            'In_beheer': null
-        },
-        'geometry': {
-            'type': 'Point',
-            'coordinates': [116856.737975477575674, 494844.916233658907004]
+            'coordinates': [113784.796368368930416, 501385.830376138910651]
         }
     }, {
         'type': 'Feature',
         'properties': {
             'name': 'zaandijk',
             'locatie': 'Begraafplaats Zaandijk',
-            'In_beheer': 'Gemeente'
+            'latlngbounds': [
+                [52.471840015440975, 4.804831699417253], //ne
+                [52.470641082928012, 4.803564893747468]  //sw
+                ]
         },
         'geometry': {
             'type': 'Point',
-            'coordinates': [115353.281510492161033, 498341.88538378989324]
-        }
-    }, {
-        'type': 'Feature',
-        'properties': {
-            'locatie': 'NH Begraafplaats Assendelft',
-            'In_beheer': null
-        },
-        'geometry': {
-            'type': 'Point',
-            'coordinates': [110952.863629886400304, 497843.937311143090483]
-        }
-    }, {
-        'type': 'Feature',
-        'properties': {
-            'locatie': 'Algemene begraafplaats Koog aan de Zaan',
-            'In_beheer': null
-        },
-        'geometry': {
-            'type': 'Point',
-            'coordinates': [115753.730797060561599, 497387.966865720401984]
+            'coordinates': [115385.613800105580594, 498326.309618735569529]
         }
     }, {
         'type': 'Feature',
         'properties': {
             'name': 'zaandam',
             'locatie': 'Begraafplaats Zaandam',
-            'In_beheer': 'Gemeente'
+            'latlngbounds': [
+                [52.427765197923577, 4.843527754453777], //ne
+                [52.424993722436575, 4.839236983372029]  //sw
+                ]
         },
         'geometry': {
             'type': 'Point',
-            'coordinates': [117860.057440271048108, 493307.425239726901054]
+            'coordinates': [117874.561537614936242, 493315.177022678486537]
         }
     }, {
         'type': 'Feature',
         'properties': {
             'name': 'krommenie',
             'locatie': 'Begraafplaats Krommenie',
-            'In_beheer': 'Gemeente'
+            'latlngbounds': [
+                [52.505632736665376, 4.767510345506552], //ne
+                [52.504335683602882, 4.76554899803385]  //sw
+                ]
         },
         'geometry': {
             'type': 'Point',
-            'coordinates': [112813.510609331831802, 502100.142202789545991]
-        }
-    }, {
-        'type': 'Feature',
-        'properties': {
-            'locatie': null,
-            'In_beheer': null
-        },
-        'geometry': {
-            'type': 'Point',
-            'coordinates': [114588.298919071967248, 500887.38849320175359]
+            'coordinates': [112858.313553176471032, 502102.060004788276274]
         }
     }, {
         'type': 'Feature',
         'properties': {
             'name': 'wormerveer',
             'locatie': 'Begraafplaats Marktstaat Wormerveer',
-            'In_beheer': 'Gemeente'
+            'latlngbounds': [
+                [52.494225171926999, 4.786297934157103], //ne
+                [52.493173027440271, 4.784928996783784]  //sw
+                ]
         },
         'geometry': {
             'type': 'Point',
-            'coordinates': [114100.446268109721132, 500850.725787038449198]
-        }
-    }, {
-        'type': 'Feature',
-        'properties': {
-            'locatie': 'RK Begraafplaats Assendelft',
-            'In_beheer': null
-        },
-        'geometry': {
-            'type': 'Point',
-            'coordinates': [111374.287088411278091, 498801.084314317151438]
-        }
-    }, {
-        'type': 'Feature',
-        'properties': {
-            'locatie': 'Begraafplaats Bullekerk',
-            'In_beheer': null
-        },
-        'geometry': {
-            'type': 'Point',
-            'coordinates': [116354.324197806286975, 495339.789558583055623]
+            'coordinates': [114143.583200616762042, 500835.48306642123498]
         }
     }, {
         'type': 'Feature',
         'properties': {
             'name': 'westzaan',
             'locatie': 'Begraafplaats Westzaan',
-            'In_beheer': 'Gemeente'
+            'latlngbounds': [
+                [52.45544393176985, 4.784943100856935], //ne
+                [52.454701889418473, 4.782551282577115]  //sw
+                ]
         },
         'geometry': {
             'type': 'Point',
-            'coordinates': [113971.665584379836218, 496562.711898133275099]
-        }
-    }, {
-        'type': 'Feature',
-        'properties': {
-            'locatie': 'Hervormde Begraafplaats Westzaan',
-            'In_beheer': null
-        },
-        'geometry': {
-            'type': 'Point',
-            'coordinates': [113141.981515908642905, 497541.872630827128887]
-        }
-    }, {
-        'type': 'Feature',
-        'properties': {
-            'locatie': 'Begraafplaats Haaldersbroek',
-            'In_beheer': null
-        },
-        'geometry': {
-            'type': 'Point',
-            'coordinates': [117199.7480462796957, 498094.983141762786545]
-        }
-    }, {
-        'type': 'Feature',
-        'properties': {
-            'locatie': 'Joodse Begraafplaats',
-            'In_beheer': null
-        },
-        'geometry': {
-            'type': 'Point',
-            'coordinates': [115023.807650491900858, 493974.601570295693818]
+            'coordinates': [113981.025601936664316, 496538.812681813375093]
         }
     }, {
         'type': 'Feature',
         'properties': {
             'name': 'krommeniedijk',
             'locatie': 'Begraafplaats Krommeniedijk',
-            'In_beheer': 'Gemeente'
+            'latlngbounds': [
+                [52.517459556189465, 4.751104468424248], //ne
+                [52.517232577590697, 4.750628339885203]  //sw
+                ]
         },
         'geometry': {
             'type': 'Point',
-            'coordinates': [111807.365304965758696, 503483.925093959027436]
+            'coordinates': [111806.941512365636299, 503486.735250812431332]
         }
     }]
 };
