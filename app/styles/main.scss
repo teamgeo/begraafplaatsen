@@ -84,6 +84,10 @@ h1, h2, h3, h4, h5, h6 {
   z-index: 10000;
 }
 
+.leaflet-tile-container img {
+  -webkit-backface-visibility: hidden;
+}
+
 .no-padding {
   padding-left: 0;
 }
@@ -155,5 +159,9 @@ h1, h2, h3, h4, h5, h6 {
 @media screen and ( max-width: 480px ) {
   .alert-info > small > i {
     display:none;
+  }
+  .container {
+      padding-left: 5px;
+      padding-right: 5px;
   }
 }
