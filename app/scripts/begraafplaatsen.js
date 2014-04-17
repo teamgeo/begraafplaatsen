@@ -18,6 +18,7 @@ var geojsonBegraafplaatsen = {
         'properties': {
             'name': 'noordster',
             'locatie': 'Begraafplaats Noordster Wormerveer',
+            'adres': 'Noordsterweg 7',
             'latlngbounds': [
                 [52.499160606098798, 4.781167963144955], //ne
                 [52.498075626755359, 4.779357759265973]  //sw
@@ -32,6 +33,7 @@ var geojsonBegraafplaatsen = {
         'properties': {
             'name': 'zaandijk',
             'locatie': 'Begraafplaats Zaandijk',
+            'adres': 'Guisweg',
             'latlngbounds': [
                 [52.471840015440975, 4.804831699417253], //ne
                 [52.470641082928012, 4.803564893747468]  //sw
@@ -46,6 +48,7 @@ var geojsonBegraafplaatsen = {
         'properties': {
             'name': 'zaandam',
             'locatie': 'Begraafplaats Zaandam',
+            'adres': 'Zuiddijk',
             'latlngbounds': [
                 [52.427765197923577, 4.843527754453777], //ne
                 [52.424993722436575, 4.839236983372029]  //sw
@@ -60,6 +63,7 @@ var geojsonBegraafplaatsen = {
         'properties': {
             'name': 'krommenie',
             'locatie': 'Begraafplaats Krommenie',
+            'adres': 'Het Blok',
             'latlngbounds': [
                 [52.505632736665376, 4.767510345506552], //ne
                 [52.504335683602882, 4.76554899803385]  //sw
@@ -74,6 +78,7 @@ var geojsonBegraafplaatsen = {
         'properties': {
             'name': 'wormerveer',
             'locatie': 'Begraafplaats Marktstaat Wormerveer',
+            'adres': 'Marktstraat',
             'latlngbounds': [
                 [52.494225171926999, 4.786297934157103], //ne
                 [52.493173027440271, 4.784928996783784]  //sw
@@ -88,6 +93,7 @@ var geojsonBegraafplaatsen = {
         'properties': {
             'name': 'westzaan',
             'locatie': 'Begraafplaats Westzaan',
+            'adres': 'Dolfijnstraat',
             'latlngbounds': [
                 [52.45544393176985, 4.784943100856935], //ne
                 [52.454701889418473, 4.782551282577115]  //sw
@@ -102,6 +108,7 @@ var geojsonBegraafplaatsen = {
         'properties': {
             'name': 'krommeniedijk',
             'locatie': 'Begraafplaats Krommeniedijk',
+            'adres': 'Nederlands Hervormde kerk<br/>Krommeniedijk 182',
             'latlngbounds': [
                 [52.517459556189465, 4.751104468424248], //ne
                 [52.517232577590697, 4.750628339885203]  //sw
