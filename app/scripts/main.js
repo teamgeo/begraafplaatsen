@@ -393,6 +393,7 @@ function guiInit() {
                     'html': value.properties.locatie
                 }).on('click', function () {
                     kaartTab();
+                    $("#begraafplaatsOption > option[value=" + value.properties.name + "]").prop("selected", true);
                     setTimeout(function () {
                         goToName(value.properties.name);
                         }, 250);
